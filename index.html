@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Circula - Belajar Lingkaran</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Boxicons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        ethereal: {
+                            purple: '#a78bfa',
+                            indigo: '#818cf8',
+                            teal: '#2dd4bf',
+                            peach: '#fb923c',
+                            pink: '#f472b6',
+                            emerald: '#34d399',
+                            cyan: '#22d3ee',
+                            amber: '#fbbf24'
+                        }
+                    },
+                    animation: {
+                        'float': 'float 3s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'fadeIn': 'fadeIn 0.5s ease-out forwards',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* Colorful Mesh Gradient Background */
+        body {
+            background-color: #f4f6f9;
+            background-image: 
+                radial-gradient(at 10% 10%, rgba(224, 195, 252, 0.7) 0px, transparent 50%),
+                radial-gradient(at 90% 10%, rgba(142, 197, 252, 0.7) 0px, transparent 50%),
+                radial-gradient(at 50% 90%, rgba(255, 184, 208, 0.7) 0px, transparent 50%),
+                radial-gradient(at 80% 80%, rgba(253, 235, 113, 0.6) 0px, transparent 50%),
+                radial-gradient(at 20% 80%, rgba(132, 250, 176, 0.5) 0px, transparent 50%);
+            color: #334155;
+            -webkit-tap-highlight-color: transparent;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 20px 0;
+        }
+
+        /* Frosted Glassmorphism */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.55);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 24px 48px -12px rgba(142, 197, 252, 0.4);
+        }
+
+        .glass-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.5));
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 8px 24px 0 rgba(0, 0, 0, 0.05);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px -8px rgba(142, 197, 252, 0.5);
+        }
+
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        /* Gradient Text */
+        .text-gradient {
+            background: linear-gradient(135deg, #6366f1, #d946ef, #f43f5e);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: textShine 4s linear infinite;
+        }
+
+        @keyframes textShine {
+            to { background-position: 200% center; }
+        }
+
+        /* Interactive SVG Transitions */
+        .svg-part {
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-origin: center;
+        }
+        
+        .svg-glow {
+            filter: drop-shadow(0 0 10px currentColor);
+        }
+
+        /* Tab Transitions */
+        .tab-section {
+            display: none;
+            opacity: 0;
+            transform: translateY(15px);
+            transition: all 0.4s ease-out;
+        }
+        .tab-section.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Nav active state */
+        .nav-item.active {
+            color: #8b5cf6;
+        }
+        .nav-item.active .icon-wrapper {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(217, 70, 239, 0.15));
+            color: #8b5cf6;
+            transform: translateY(-4px);
+            border-radius: 14px;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2);
+        }
+        .icon-wrapper {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(139, 92, 246, 0.3);
+            border-radius: 10px;
+        }
+        
+        /* Modal Animation */
+        .modal-active {
+            opacity: 1 !important;
+            pointer-events: auto !important;
+        }
+        .modal-img-active {
+            transform: scale(1) !important;
+        }
+
+
+        /* Extra visual polish: richer colors, gentle motion, and responsive quiz visuals */
+        body {
+            background-size: 180% 180%;
+            animation: backgroundDrift 18s ease-in-out infinite alternate;
+        }
+        @keyframes backgroundDrift {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 100% 100%; }
+        }
+        @keyframes softPop {
+            0% { opacity: 0; transform: translateY(14px) scale(.98); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes orbitPulse {
+            0%, 100% { transform: scale(1); opacity: .9; }
+            50% { transform: scale(1.035); opacity: 1; }
+        }
+        @keyframes shimmerLine {
+            0% { background-position: -180% 0; }
+            100% { background-position: 180% 0; }
+        }
+        .animate-soft-pop { animation: softPop .55s cubic-bezier(.2,.8,.2,1) both; }
+        .quiz-visual {
+            background: linear-gradient(135deg, rgba(255,255,255,.98), rgba(238,242,255,.88) 48%, rgba(252,231,243,.75));
+            border: 1px solid rgba(255,255,255,.95);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.95), 0 12px 28px rgba(99,102,241,.10);
+            overflow: hidden;
+        }
+        .quiz-visual svg { width: 100%; max-height: 190px; display: block; }
+        .quiz-visual .diagram-circle { transform-box: fill-box; transform-origin: center; animation: orbitPulse 3s ease-in-out infinite; }
+        .quiz-visual .diagram-dash { stroke-dasharray: 7 6; animation: dashMove 8s linear infinite; }
+        @keyframes dashMove { to { stroke-dashoffset: -104; } }
+        .quiz-opt { position: relative; overflow: hidden; }
+        .quiz-opt:not(:disabled):hover { transform: translateY(-2px); border-color: rgba(139,92,246,.45); box-shadow: 0 10px 20px rgba(99,102,241,.10); }
+        .solution-panel { animation: softPop .45s ease-out both; }
+        .solution-step { position: relative; padding-left: 2.15rem; }
+        .solution-step-number {
+            position: absolute; left: 0; top: .05rem; width: 1.55rem; height: 1.55rem;
+            display: inline-flex; align-items: center; justify-content: center; border-radius: 999px;
+            color: white; font-size: .7rem; font-weight: 800; background: linear-gradient(135deg,#6366f1,#d946ef);
+            box-shadow: 0 4px 10px rgba(99,102,241,.2);
+        }
+        .challenge-card { transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease; }
+        .challenge-card:hover { transform: translateX(4px); box-shadow: 0 12px 24px rgba(99,102,241,.10); }
+        .challenge-button { transition: transform .2s ease, filter .2s ease; }
+        .challenge-button:hover { transform: scale(1.03); filter: brightness(1.04); }
+        .example-card { animation: softPop .45s ease-out both; }
+        .example-card:nth-child(2) { animation-delay: .04s; }
+        .example-card:nth-child(3) { animation-delay: .08s; }
+        .example-card:nth-child(4) { animation-delay: .12s; }
+        .example-card:nth-child(5) { animation-delay: .16s; }
+        .example-card:nth-child(6) { animation-delay: .20s; }
+        .example-card:nth-child(7) { animation-delay: .24s; }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .01ms !important; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Main Container -->
+    <main class="w-full max-w-[420px] md:max-w-[1000px] h-[92vh] max-h-[850px] glass-panel md:rounded-[2.5rem] rounded-[2.5rem] relative flex flex-col md:flex-row overflow-hidden sm:my-4 mx-auto shadow-2xl">
+        
+        <!-- ==================== NAVIGATION ==================== -->
+        <nav class="absolute bottom-0 w-full md:relative md:w-28 md:h-full glass-nav z-40 border-t md:border-t-0 md:border-r border-white/70">
+            <div class="flex md:flex-col justify-between items-center max-w-[360px] md:max-w-none mx-auto h-full px-2 py-3 md:py-8 gap-1 md:gap-8">
+                <!-- App Icon -->
+                <div class="hidden md:flex w-14 h-14 rounded-2xl bg-gradient-to-tr from-indigo-500 to-purple-500 items-center justify-center text-white shadow-lg shadow-purple-500/30 mb-4">
+                    <i class='bx bx-compass text-3xl'></i>
+                </div>
+
+                <button onclick="switchTab('home')" id="nav-home" class="nav-item active flex flex-col items-center gap-1 w-16 md:w-full text-slate-400 hover:text-purple-400 transition-colors">
+                    <div class="icon-wrapper w-12 h-9 md:w-14 md:h-12 flex items-center justify-center">
+                        <i class='bx bx-home-alt-2 text-[22px] md:text-[26px]'></i>
+                    </div>
+                    <span class="text-[10px] md:text-xs font-medium tracking-wide">Beranda</span>
+                </button>
+                
+                <button onclick="switchTab('materi')" id="nav-materi" class="nav-item flex flex-col items-center gap-1 w-16 md:w-full text-slate-400 hover:text-purple-400 transition-colors">
+                    <div class="icon-wrapper w-12 h-9 md:w-14 md:h-12 flex items-center justify-center">
+                        <i class='bx bx-shape-circle text-[22px] md:text-[26px]'></i>
+                    </div>
+                    <span class="text-[10px] md:text-xs font-medium tracking-wide">Materi</span>
+                </button>
+                
+                <button onclick="switchTab('kalkulator')" id="nav-kalkulator" class="nav-item flex flex-col items-center gap-1 w-16 md:w-full text-slate-400 hover:text-purple-400 transition-colors">
+                    <div class="icon-wrapper w-12 h-9 md:w-14 md:h-12 flex items-center justify-center">
+                        <i class='bx bx-calculator text-[22px] md:text-[26px]'></i>
+                    </div>
+                    <span class="text-[10px] md:text-xs font-medium tracking-wide">Hitung</span>
+                </button>
+                
+                <button onclick="switchTab('contoh')" id="nav-contoh" class="nav-item flex flex-col items-center gap-1 w-16 md:w-full text-slate-400 hover:text-purple-400 transition-colors">
+                    <div class="icon-wrapper w-12 h-9 md:w-14 md:h-12 flex items-center justify-center">
+                        <i class='bx bx-book-open text-[22px] md:text-[26px]'></i>
+                    </div>
+                    <span class="text-[10px] md:text-xs font-medium tracking-wide">Contoh</span>
+                </button>
+                
+                <button onclick="switchTab('kuis')" id="nav-kuis" class="nav-item flex flex-col items-center gap-1 w-16 md:w-full text-slate-400 hover:text-purple-400 transition-colors">
+                    <div class="icon-wrapper w-12 h-9 md:w-14 md:h-12 flex items-center justify-center">
+                        <i class='bx bx-joystick text-[22px] md:text-[26px]'></i>
+                    </div>
+                    <span class="text-[10px] md:text-xs font-medium tracking-wide">Kuis</span>
+                </button>
+            </div>
+        </nav>
+
+        <!-- ==================== CONTENT AREA ==================== -->
+        <div class="flex-1 flex flex-col relative h-full">
+            
+            <!-- Header -->
+            <header class="px-7 pt-8 pb-3 flex justify-between items-center z-20">
+                <div>
+                    <p class="text-xs font-semibold tracking-wider text-purple-500 uppercase mb-1" id="header-date"></p>
+                    <h1 class="text-2xl md:text-3xl font-bold tracking-tight text-gradient">Circula.</h1>
+                </div>
+                <!-- Foto Profil dengan Solusi Fallback Otomatis -->
+                <div onclick="openModal()" class="w-12 h-12 md:w-14 md:h-14 rounded-full overflow-hidden border-[3px] border-white shadow-lg shadow-purple-200 cursor-pointer hover:scale-105 transition-transform bg-white/50">
+                    <!-- Jika foto tidak ditemukan, akan pakai avatar inisial -->
+                    <img src="image_22a555.jpeg" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Fahrezi+Sauqi&background=a78bfa&color=fff&size=150';" alt="Profil Fahrezi" class="w-full h-full object-cover">
+                </div>
+            </header>
+
+            <!-- Scrollable Sections -->
+            <div class="flex-1 overflow-y-auto px-6 pb-28 md:pb-8 pt-4 scroll-smooth" id="main-scroll">
+                
+                <div class="max-w-3xl mx-auto">
+                    
+                    <!-- ==================== 1. BERANDA ==================== -->
+                    <section id="tab-home" class="tab-section active space-y-6">
+                        <div class="rounded-[2rem] p-6 md:p-8 relative overflow-hidden shadow-lg shadow-indigo-200/50" style="background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);">
+                            <div class="relative z-10 text-slate-800">
+                                <h2 class="text-[22px] md:text-2xl font-bold mb-2 text-slate-800">Halo, Fahrezi Sauqi Alghani! ✨</h2>
+                                <p class="text-slate-700/90 text-sm md:text-base font-medium leading-relaxed max-w-md">
+                                    Siap untuk menjelajahi keajaiban geometri lingkaran hari ini? Mari belajar dengan cara yang menyenangkan!
+                                </p>
+                            </div>
+                            <div class="absolute -right-10 -top-10 w-48 h-48 bg-white/40 rounded-full blur-2xl"></div>
+                            <div class="absolute right-10 -bottom-10 w-32 h-32 border-[3px] border-white/50 rounded-full opacity-70"></div>
+                            <div class="absolute right-32 top-10 w-12 h-12 bg-yellow-300/40 rounded-full blur-lg"></div>
+                        </div>
+
+                        <div>
+                            <h3 class="text-sm md:text-base font-bold text-slate-600 mb-4 px-1">Menu Eksplorasi</h3>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                <div onclick="switchTab('materi')" class="glass-card p-5 rounded-3xl cursor-pointer flex flex-col items-center text-center hover:bg-indigo-50/50">
+                                    <div class="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-500 mb-3 shadow-sm"><i class='bx bx-compass text-2xl'></i></div>
+                                    <h4 class="font-semibold text-slate-700 text-sm">Visualisasi</h4>
+                                    <p class="text-[11px] text-slate-500 mt-1">Konsep Interaktif</p>
+                                </div>
+                                <div onclick="switchTab('kalkulator')" class="glass-card p-5 rounded-3xl cursor-pointer flex flex-col items-center text-center hover:bg-teal-50/50">
+                                    <div class="w-12 h-12 rounded-full bg-teal-100 flex items-center justify-center text-teal-500 mb-3 shadow-sm"><i class='bx bx-math text-2xl'></i></div>
+                                    <h4 class="font-semibold text-slate-700 text-sm">Kalkulator</h4>
+                                    <p class="text-[11px] text-slate-500 mt-1">Hitung Cepat</p>
+                                </div>
+                                <div onclick="switchTab('contoh')" class="glass-card p-5 rounded-3xl cursor-pointer flex flex-col items-center text-center hover:bg-amber-50/50">
+                                    <div class="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center text-amber-500 mb-3 shadow-sm"><i class='bx bx-bulb text-2xl'></i></div>
+                                    <h4 class="font-semibold text-slate-700 text-sm">Studi Kasus</h4>
+                                    <p class="text-[11px] text-slate-500 mt-1">Langkah Jawab</p>
+                                </div>
+                                <div onclick="switchTab('kuis')" class="glass-card p-5 rounded-3xl cursor-pointer flex flex-col items-center text-center hover:bg-rose-50/50">
+                                    <div class="w-12 h-12 rounded-full bg-rose-100 flex items-center justify-center text-rose-500 mb-3 shadow-sm"><i class='bx bx-joystick text-2xl'></i></div>
+                                    <h4 class="font-semibold text-slate-700 text-sm">Tantangan</h4>
+                                    <p class="text-[11px] text-slate-500 mt-1">Kuis Interaktif</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ==================== 2. MATERI ==================== -->
+                    <section id="tab-materi" class="tab-section space-y-5">
+                        <div class="px-1 md:text-center md:mb-6">
+                            <h2 class="text-xl md:text-2xl font-bold text-slate-700">Anatomi Lingkaran</h2>
+                            <p class="text-xs md:text-sm text-slate-500 mt-1">Klik elemen di bawah untuk melihat bagian-bagiannya.</p>
+                        </div>
+                        <div class="md:grid md:grid-cols-2 md:gap-8 md:items-center">
+                            <div class="glass-card p-6 rounded-[2rem] flex justify-center items-center h-56 md:h-72 relative overflow-hidden mb-5 md:mb-0">
+                                <div class="absolute inset-0 bg-gradient-to-tr from-cyan-300/20 to-purple-300/20"></div>
+                                <svg viewBox="0 0 200 200" class="w-48 h-48 md:w-60 md:h-60 z-10 drop-shadow-xl">
+                                    <circle id="svg-luas" cx="100" cy="100" r="80" fill="transparent" class="svg-part" />
+                                    <circle id="svg-keliling" cx="100" cy="100" r="80" fill="transparent" stroke="#cbd5e1" stroke-width="4" class="svg-part" />
+                                    <line id="svg-diameter" x1="20" y1="100" x2="180" y2="100" stroke="transparent" stroke-width="4" class="svg-part" stroke-linecap="round"/>
+                                    <line id="svg-jari" x1="100" y1="100" x2="160" y2="47" stroke="#cbd5e1" stroke-width="3" stroke-dasharray="4" class="svg-part" stroke-linecap="round"/>
+                                    <circle id="svg-pusat" cx="100" cy="100" r="4" fill="#94a3b8" class="svg-part" />
+                                </svg>
+                            </div>
+                            <div class="space-y-3">
+                                <div onclick="highlightCircle('pusat')" class="glass-card p-4 rounded-2xl cursor-pointer hover:bg-slate-50 border-l-4 border-l-slate-400">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-600"><i class='bx bx-target-lock text-xl'></i></div>
+                                        <div><h3 class="font-semibold text-slate-700 text-sm">Titik Pusat</h3><p class="text-[11px] text-slate-500">Titik persis di tengah lingkaran.</p></div>
+                                    </div>
+                                </div>
+                                <div onclick="highlightCircle('jari')" class="glass-card p-4 rounded-2xl cursor-pointer hover:bg-teal-50 border-l-4 border-l-teal-400">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 rounded-full bg-teal-100 flex items-center justify-center text-teal-600"><i class='bx bx-share-alt text-xl'></i></div>
+                                        <div><h3 class="font-semibold text-slate-700 text-sm">Jari-jari (r)</h3><p class="text-[11px] text-slate-500">Garis dari pusat ke titik di tepi lingkaran.</p></div>
+                                    </div>
+                                </div>
+                                <div onclick="highlightCircle('diameter')" class="glass-card p-4 rounded-2xl cursor-pointer hover:bg-amber-50 border-l-4 border-l-amber-400">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center text-amber-500"><i class='bx bx-minus text-xl font-bold'></i></div>
+                                        <div><h3 class="font-semibold text-slate-700 text-sm">Diameter (d)</h3><p class="text-[11px] text-slate-500">Garis lurus pembelah, panjangnya 2 × r.</p></div>
+                                    </div>
+                                </div>
+                                <div onclick="highlightCircle('keliling')" class="glass-card p-4 rounded-2xl cursor-pointer hover:bg-indigo-50 border-l-4 border-l-indigo-400">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-500"><i class='bx bx-circle text-xl'></i></div>
+                                        <div><h3 class="font-semibold text-slate-700 text-sm">Keliling (K)</h3><p class="text-[11px] text-slate-500">Panjang garis tepi (K = 2 × π × r).</p></div>
+                                    </div>
+                                </div>
+                                <div onclick="highlightCircle('luas')" class="glass-card p-4 rounded-2xl cursor-pointer hover:bg-purple-50 border-l-4 border-l-purple-400">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center text-purple-500"><i class='bx bxs-pie-chart-alt-2 text-xl'></i></div>
+                                        <div><h3 class="font-semibold text-slate-700 text-sm">Luas (L)</h3><p class="text-[11px] text-slate-500">Seluruh area di dalam lingkaran (L = π × r²).</p></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ==================== 3. KALKULATOR ==================== -->
+                    <section id="tab-kalkulator" class="tab-section space-y-5">
+                        <div class="px-1 mb-2 md:text-center md:mb-6">
+                            <h2 class="text-xl md:text-2xl font-bold text-slate-700">Kalkulator Pintar</h2>
+                            <p class="text-xs md:text-sm text-slate-500 mt-1">Hitung luas dan temukan rincian langkahnya.</p>
+                        </div>
+                        <div class="md:grid md:grid-cols-2 md:gap-8 md:items-start">
+                            <div class="glass-card p-5 rounded-[2rem]">
+                                <div class="flex p-1 bg-white/80 rounded-2xl mb-5 relative border border-white/80 shadow-sm">
+                                    <button id="calc-btn-r" onclick="switchCalcMode('r')" class="flex-1 py-2.5 text-xs font-semibold rounded-xl bg-gradient-to-r from-purple-500 to-indigo-500 text-white shadow-md transition-all">Jari-jari (r)</button>
+                                    <button id="calc-btn-d" onclick="switchCalcMode('d')" class="flex-1 py-2.5 text-xs font-medium rounded-xl text-slate-500 hover:text-slate-700 transition-all bg-transparent">Diameter (d)</button>
+                                </div>
+                                <div class="mb-6">
+                                    <label id="calc-label" class="block text-xs font-bold text-slate-600 mb-2 uppercase tracking-wider pl-1">Nilai Jari-jari (cm)</label>
+                                    <input type="number" id="calc-input" placeholder="Masukkan angka..." class="w-full bg-white border border-white text-slate-800 rounded-2xl px-5 py-4 outline-none focus:border-purple-400 focus:ring-4 focus:ring-purple-500/20 transition-all text-lg font-medium shadow-inner">
+                                </div>
+                                <button onclick="calculateData()" class="w-full text-white font-bold py-4 rounded-2xl flex justify-center items-center gap-2 shadow-lg shadow-purple-500/30 transition-transform hover:scale-[1.02] active:scale-95" style="background: linear-gradient(135deg, #6366f1, #d946ef);">
+                                    <i class='bx bx-check-double text-xl'></i> Tampilkan Solusi
+                                </button>
+
+                                <!-- Tantangan berada tepat di bawah tombol hitung, tersusun vertikal -->
+                                <div class="mt-6 pt-5 border-t border-white/80">
+                                    <div class="flex items-center justify-between mb-3">
+                                        <div>
+                                            <p class="text-[10px] uppercase tracking-[.18em] font-extrabold text-indigo-500">Zona latihan</p>
+                                            <h3 class="font-bold text-slate-800 text-sm">Tantangan Bertahap ✦</h3>
+                                        </div>
+                                        <span class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-amber-100 text-amber-700">3 level</span>
+                                    </div>
+                                    <p class="text-[11px] text-slate-500 leading-relaxed mb-3">Coba hitung sendiri di buku, lalu tekan “Isi angka” untuk memeriksa hasilnya melalui kalkulator.</p>
+                                    <div class="space-y-3">
+                                        <div class="challenge-card rounded-2xl border border-emerald-100 bg-gradient-to-r from-emerald-50 to-white p-3.5">
+                                            <div class="flex items-start justify-between gap-2">
+                                                <div><span class="text-[9px] uppercase tracking-wider font-extrabold text-emerald-600">Level 1 · Pemula</span><p class="text-xs font-bold text-slate-700 mt-1">Jari-jari 7 cm</p><p class="text-[10px] text-slate-500 mt-1">Tentukan luas lingkarannya.</p></div>
+                                                <i class='bx bx-leaf text-2xl text-emerald-500'></i>
+                                            </div>
+                                            <button onclick="loadChallenge('r', 7)" class="challenge-button mt-3 w-full rounded-xl bg-emerald-500 text-white text-[11px] font-bold py-2.5">Isi angka ke kalkulator</button>
+                                        </div>
+                                        <div class="challenge-card rounded-2xl border border-sky-100 bg-gradient-to-r from-sky-50 to-white p-3.5">
+                                            <div class="flex items-start justify-between gap-2">
+                                                <div><span class="text-[9px] uppercase tracking-wider font-extrabold text-sky-600">Level 2 · Menengah</span><p class="text-xs font-bold text-slate-700 mt-1">Diameter 28 cm</p><p class="text-[10px] text-slate-500 mt-1">Ingat, ubah diameter menjadi jari-jari.</p></div>
+                                                <i class='bx bx-target-lock text-2xl text-sky-500'></i>
+                                            </div>
+                                            <button onclick="loadChallenge('d', 28)" class="challenge-button mt-3 w-full rounded-xl bg-sky-500 text-white text-[11px] font-bold py-2.5">Isi angka ke kalkulator</button>
+                                        </div>
+                                        <div class="challenge-card rounded-2xl border border-fuchsia-100 bg-gradient-to-r from-fuchsia-50 to-white p-3.5">
+                                            <div class="flex items-start justify-between gap-2">
+                                                <div><span class="text-[9px] uppercase tracking-wider font-extrabold text-fuchsia-600">Level 3 · Lanjutan</span><p class="text-xs font-bold text-slate-700 mt-1">Jari-jari 21 m</p><p class="text-[10px] text-slate-500 mt-1">Hitung luas taman berbentuk lingkaran.</p></div>
+                                                <i class='bx bxs-trophy text-2xl text-fuchsia-500'></i>
+                                            </div>
+                                            <button onclick="loadChallenge('r', 21)" class="challenge-button mt-3 w-full rounded-xl bg-fuchsia-500 text-white text-[11px] font-bold py-2.5">Isi angka ke kalkulator</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="calc-result" class="hidden mt-6 md:mt-0 space-y-4 animate-[fadeIn_0.5s_ease-out]">
+                                <div class="glass-card p-6 rounded-[2rem]">
+                                    <h3 class="text-sm font-bold text-slate-700 mb-4 flex items-center gap-2 border-b border-slate-200 pb-3">
+                                        <i class='bx bx-list-check text-purple-600 text-lg'></i> Rincian Penjelasan
+                                    </h3>
+                                    <div class="space-y-4 text-[13px]">
+                                        <div>
+                                            <p class="font-bold text-slate-600">1. Diketahui:</p>
+                                            <div class="pl-3 mt-1.5 text-slate-600 border-l-[3px] border-emerald-400 bg-emerald-50/50 p-2 rounded-r-lg" id="res-diketahui"></div>
+                                        </div>
+                                        <div>
+                                            <p class="font-bold text-slate-600">2. Rumus Luas:</p>
+                                            <div class="mt-1.5 inline-block px-3 py-1.5 bg-indigo-50 text-indigo-600 rounded-lg font-mono text-xs font-bold border border-indigo-100">L = π × r²</div>
+                                        </div>
+                                        <div>
+                                            <p class="font-bold text-slate-600">3. Perhitungan:</p>
+                                            <div class="pl-3 mt-1.5 text-slate-600 space-y-1 font-mono text-xs border-l-[3px] border-pink-400 bg-pink-50/50 p-2 rounded-r-lg" id="res-penyelesaian"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="p-5 rounded-[2rem] text-center shadow-lg border border-white/80 relative overflow-hidden" style="background: linear-gradient(135deg, #fff, #f3e8ff);">
+                                    <p class="text-xs font-bold text-purple-500 uppercase tracking-wider mb-1 relative z-10">Luas Lingkaran</p>
+                                    <p class="text-3xl font-black text-slate-800 relative z-10"><span id="res-hasil">0</span> <span class="text-base text-slate-500 font-semibold">cm²</span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ==================== 4. CONTOH SOAL ==================== -->
+                    <section id="tab-contoh" class="tab-section space-y-4">
+                        <div class="px-1 mb-2 md:text-center md:mb-6">
+                            <span class="inline-flex items-center gap-1 rounded-full bg-amber-100 text-amber-700 px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider mb-2"><i class='bx bx-bulb'></i> Belajar langkah demi langkah</span>
+                            <h2 class="text-xl md:text-2xl font-bold text-slate-700">7 Contoh Soal Lingkaran</h2>
+                            <p class="text-xs md:text-sm text-slate-500 mt-1">Buka setiap soal untuk melihat diketahui, ditanya, rumus, dan penjelasan cara menghitungnya.</p>
+                        </div>
+                        <div class="rounded-2xl p-4 bg-gradient-to-r from-indigo-500 via-violet-500 to-fuchsia-500 text-white shadow-lg shadow-violet-200/60 mb-4">
+                            <div class="flex items-center gap-3"><div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center text-2xl"><i class='bx bx-book-reader'></i></div><div><p class="font-bold text-sm">Cara menggunakan contoh</p><p class="text-[11px] text-white/85">Coba pahami soal dulu, lalu buka pembahasan dan ikuti urutan angkanya.</p></div></div>
+                        </div>
+                        <div class="space-y-3"><article class="example-card glass-card rounded-3xl overflow-hidden shadow-sm">
+        <button onclick="toggleFaq(1)" aria-expanded="false" aria-controls="faq-content-1" class="w-full text-left p-5 flex justify-between items-center bg-white/45 hover:bg-white/75 transition-colors">
+            <span class="pr-4"><span class="inline-flex text-[9px] uppercase tracking-wider font-extrabold text-indigo-600 bg-indigo-100 rounded-full px-2.5 py-1 mb-2">Contoh 1 · Luas lingkaran</span><span class="block font-semibold text-slate-700 text-sm leading-relaxed">Sebuah roda sepeda memiliki jari-jari 14 cm. Berapakah luas bidang lingkaran roda tersebut?</span></span>
+            <i id="faq-icon-1" class='bx bx-chevron-down text-2xl text-indigo-500 transition-transform duration-300'></i>
+        </button>
+        <div id="faq-content-1" class="hidden px-5 pb-5 pt-2 text-[13px]">
+            <div class="space-y-3 pt-3 border-t border-slate-200">
+                <div class="rounded-2xl border border-blue-100 bg-gradient-to-r from-blue-50 to-white p-4">
+                    <p class="font-bold text-blue-700 mb-2 flex items-center gap-1.5"><i class='bx bx-info-circle text-lg'></i> 1. Diketahui</p>
+                    <div class="text-xs text-blue-800/90 space-y-1"><p>Jari-jari (r) = <b>14 cm</b></p><p>π = <b>22/7</b>, karena 14 merupakan kelipatan 7.</p></div>
+                </div>
+                <div class="rounded-2xl border border-violet-100 bg-gradient-to-r from-violet-50 to-white p-4">
+                    <p class="font-bold text-violet-700 mb-2 flex items-center gap-1.5"><i class='bx bx-bullseye text-lg'></i> 2. Ditanya</p>
+                    <p class="text-xs text-violet-800">Luas lingkaran (L).</p>
+                </div>
+                <div class="rounded-2xl border border-amber-100 bg-gradient-to-r from-amber-50 to-white p-4">
+                    <p class="font-bold text-amber-700 mb-2 flex items-center gap-1.5"><i class='bx bx-math text-lg'></i> 3. Rumus yang digunakan</p>
+                    <p class="font-mono text-xs font-bold text-amber-900">L = π × r × r</p>
+                </div>
+                <div class="rounded-2xl border border-emerald-100 bg-gradient-to-r from-emerald-50 to-white p-4">
+                    <p class="font-bold text-emerald-700 mb-3 flex items-center gap-1.5"><i class='bx bx-list-check text-lg'></i> 4. Langkah penyelesaian</p>
+                    <div class="space-y-3"><div class="solution-step"><span class="solution-step-number">1</span><p class="text-xs text-slate-700 leading-relaxed">Masukkan nilai yang diketahui ke rumus: L = 22/7 × 14 × 14.</p></div><div class="solution-step"><span class="solution-step-number">2</span><p class="text-xs text-slate-700 leading-relaxed">Sederhanakan 14 ÷ 7 = 2, sehingga L = 22 × 2 × 14.</p></div><div class="solution-step"><span class="solution-step-number">3</span><p class="text-xs text-slate-700 leading-relaxed">Hitung 22 × 2 = 44, kemudian 44 × 14 = 616.</p></div></div>
+                    <div class="mt-4 rounded-xl bg-white/80 border border-emerald-200 p-3"><p class="text-[10px] uppercase tracking-wider font-extrabold text-emerald-600 mb-1">Kesimpulan</p><p class="text-sm font-black text-emerald-800">616 cm²</p></div>
+                </div>
+                <div class="rounded-2xl bg-slate-50 border border-slate-200 p-3.5"><p class="text-[10px] uppercase tracking-wider font-extrabold text-slate-500 mb-1">Kenapa langkah ini dilakukan?</p><p class="text-xs text-slate-600 leading-relaxed">Jari-jari adalah jarak dari titik pusat ke tepi lingkaran. Karena yang ditanyakan luas, kita menggunakan r dua kali dalam rumus. Satuan luas selalu menggunakan satuan persegi, yaitu cm².</p></div>
+            </div>
+        </div>
+    </article>
+<article class="example-card glass-card rounded-3xl overflow-hidden shadow-sm">
+        <button onclick="toggleFaq(2)" aria-expanded="false" aria-controls="faq-content-2" class="w-full text-left p-5 flex justify-between items-center bg-white/45 hover:bg-white/75 transition-colors">
+            <span class="pr-4"><span class="inline-flex text-[9px] uppercase tracking-wider font-extrabold text-pink-600 bg-pink-100 rounded-full px-2.5 py-1 mb-2">Contoh 2 · Luas dari diameter</span><span class="block font-semibold text-slate-700 text-sm leading-relaxed">Sebuah kaca spion berbentuk lingkaran memiliki diameter 20 cm. Berapa luas permukaan kaca spion?</span></span>
+            <i id="faq-icon-2" class='bx bx-chevron-down text-2xl text-pink-500 transition-transform duration-300'></i>
+        </button>
+        <div id="faq-content-2" class="hidden px-5 pb-5 pt-2 text-[13px]">
+            <div class="space-y-3 pt-3 border-t border-slate-200">
+                <div class="rounded-2xl border border-blue-100 bg-gradient-to-r from-blue-50 to-white p-4">
+                    <p class="font-bold text-blue-700 mb-2 flex items-center gap-1.5"><i class='bx bx-info-circle text-lg'></i> 1. Diketahui</p>
+                    <div class="text-xs text-blue-800/90 space-y-1"><p>Diameter (d) = <b>20 cm</b></p><p>Jari-jari (r) = d ÷ 2 = <b>10 cm</b>.</p><p>Gunakan π = <b>3,14</b>.</p></div>
+                </div>
+                <div class="rounded-2xl border border-violet-100 bg-gradient-to-r from-violet-50 to-white p-4">
+                    <p class="font-bold text-violet-700 mb-2 flex items-center gap-1.5"><i class='bx bx-bullseye text-lg'></i> 2. Ditanya</p>
+                    <p class="text-xs text-violet-800">Luas kaca spion.</p>
+                </div>
+                <div class="rounded-2xl border border-amber-100 bg-gradient-to-r from-amber-50 to-white p-4">
+                    <p class="font-bold text-amber-700 mb-2 flex items-center gap-1.5"><i class='bx bx-math text-lg'></i> 3. Rumus yang digunakan</p>
+                    <p class="font-mono text-xs font-bold text-amber-900">L = π × r × r</p>
+                </div>
+                <div class="rounded-2xl border border-emerald-100 bg-gradient-to-r from-emerald-50 to-white p-4">
+                    <p class="font-bold text-emerald-700 mb-3 flex items-center gap-1.5"><i class='bx bx-list-check text-lg'></i> 4. Langkah penyelesaian</p>
+                    <div class="space-y-3"><div class="solution-step"><span class="solution-step-number">1</span><p class="text-xs text-slate-700 leading-relaxed">Rumus luas membutuhkan jari-jari, sedangkan soal memberikan diameter.</p></div><div class="solution-step"><span class="solution-step-number">2</span><p class="text-xs text-slate-700 leading-relaxed">Ubah diameter menjadi jari-jari: r = 20 ÷ 2 = 10 cm.</p></div><div class="solution-step"><span class="solution-step-number">3</span><p class="text-xs text-slate-700 leading-relaxed">Substitusikan: L = 3,14 × 10 × 10.</p></div><div class="solution-step"><span class="solution-step-number">4</span><p class="text-xs text-slate-700 leading-relaxed">Kalikan 10 × 10 = 100, sehingga L = 3,14 × 100 = 314.</p></div></div>
+                    <div class="mt-4 rounded-xl bg-white/80 border border-emerald-200 p-3"><p class="text-[10px] uppercase tracking-wider font-extrabold text-emerald-600 mb-1">Kesimpulan</p><p class="text-sm font-black text-emerald-800">314 cm²</p></div>
+                </div>
+                <div class="rounded-2xl bg-slate-50 border border-slate-200 p-3.5"><p class="text-[10px] uppercase tracking-wider font-extrabold text-slate-500 mb-1">Kenapa langkah ini dilakukan?</p><p class="text-xs text-slate-600 leading-relaxed">Diameter adalah garis yang melewati titik pusat dari satu sisi lingkaran ke sisi seberangnya. Jari-jari selalu setengah diameter, jadi diameter harus dibagi dua sebelum menghitung luas.</p></div>
+            </div>
+        </div>
+    </article>
+<article class="example-card glass-card rounded-3xl overflow-hidden shadow-sm">
+        <button onclick="toggleFaq(3)" aria-expanded="false" aria-controls="faq-content-3" class="w-full text-left p-5 flex justify-between items-center bg-white/45 hover:bg-white/75 transition-colors">
+            <span class="pr-4"><span class="inline-flex text-[9px] uppercase tracking-wider font-extrabold text-teal-600 bg-teal-100 rounded-full px-2.5 py-1 mb-2">Contoh 3 · Keliling lingkaran</span><span class="block font-semibold text-slate-700 text-sm leading-relaxed">Sebuah taman berbentuk lingkaran memiliki diameter 28 meter. Berapa panjang pagar yang dibutuhkan untuk mengelilingi taman?</span></span>
+            <i id="faq-icon-3" class='bx bx-chevron-down text-2xl text-teal-500 transition-transform duration-300'></i>
+        </button>
+        <div id="faq-content-3" class="hidden px-5 pb-5 pt-2 text-[13px]">
+            <div class="space-y-3 pt-3 border-t border-slate-200">
+                <div class="rounded-2xl border border-blue-100 bg-gradient-to-r from-blue-50 to-white p-4">
+                    <p class="font-bold text-blue-700 mb-2 flex items-center gap-1.5"><i class='bx bx-info-circle text-lg'></i> 1. Diketahui</p>
+                    <div class="text-xs text-blue-800/90 space-y-1"><p>Diameter (d) = <b>28 m</b></p><p>π = <b>22/7</b>, karena 28 habis dibagi 7.</p></div>
+                </div>
+                <div class="rounded-2xl border border-violet-100 bg-gradient-to-r from-violet-50 to-white p-4">
+                    <p class="font-bold text-violet-700 mb-2 flex items-center gap-1.5"><i class='bx bx-bullseye text-lg'></i> 2. Ditanya</p>
+                    <p class="text-xs text-violet-800">Keliling taman (K).</p>
+                </div>
+                <div class="rounded-2xl border border-amber-100 bg-gradient-to-r from-amber-50 to-white p-4">
+                    <p class="font-bold text-amber-700 mb-2 flex items-center gap-1.5"><i class='bx bx-math text-lg'></i> 3. Rumus yang digunakan</p>
+                    <p class="font-mono text-xs font-bold text-amber-900">K = π × d</p>
+                </div>
+                <div class="rounded-2xl border border-emerald-100 bg-gradient-to-r from-emerald-50 to-white p-4">
+                    <p class="font-bold text-emerald-700 mb-3 flex items-center gap-1.5"><i class='bx bx-list-check text-lg'></i> 4. Langkah penyelesaian</p>
+                    <div class="space-y-3"><div class="solution-step"><span class="solution-step-number">1</span><p class="text-xs text-slate-700 leading-relaxed">Pagar dipasang mengelilingi tepi taman, jadi yang dicari adalah keliling, bukan luas.</p></div><div class="solution-step"><span class="solution-step-number">2</span><p class="text-xs text-slate-700 leading-relaxed">Gunakan rumus K = π × d.</p></div><div class="solution-step"><span class="solution-step-number">3</span><p class="text-xs text-slate-700 leading-relaxed">Masukkan angka: K = 22/7 × 28.</p></div><div class="solution-step"><span class="solution-step-number">4</span><p class="text-xs text-slate-700 leading-relaxed">Sederhanakan 28 ÷ 7 = 4, sehingga K = 22 × 4 = 88.</p></div></div>
+                    <div class="mt-4 rounded-xl bg-white/80 border border-emerald-200 p-3"><p class="text-[10px] uppercase tracking-wider font-extrabold text-emerald-600 mb-1">Kesimpulan</p><p class="text-sm font-black text-emerald-800">88 meter pagar</p></div>
+                </div>
+                <div class="rounded-2xl bg-slate-50 border border-slate-200 p-3.5"><p class="text-[10px] uppercase tracking-wider font-extrabold text-slate-500 mb-1">Kenapa langkah ini dilakukan?</p><p class="text-xs text-slate-600 leading-relaxed">Keliling adalah panjang garis tepi suatu lingkaran. Karena diameter sudah diketahui, rumus K = π × d lebih sederhana daripada mengubahnya ke jari-jari.</p></div>
+            </div>
+        </div>
+    </article>
+<article class="example-card glass-card rounded-3xl overflow-hidden shadow-sm">
+        <button onclick="toggleFaq(4)" aria-expanded="false" aria-controls="faq-content-4" class="w-full text-left p-5 flex justify-between items-center bg-white/45 hover:bg-white/75 transition-colors">
+            <span class="pr-4"><span class="inline-flex text-[9px] uppercase tracking-wider font-extrabold text-amber-600 bg-amber-100 rounded-full px-2.5 py-1 mb-2">Contoh 4 · Luas dalam kehidupan sehari-hari</span><span class="block font-semibold text-slate-700 text-sm leading-relaxed">Sebuah pizza berbentuk lingkaran memiliki diameter 28 cm. Berapa luas permukaan pizza tersebut?</span></span>
+            <i id="faq-icon-4" class='bx bx-chevron-down text-2xl text-amber-500 transition-transform duration-300'></i>
+        </button>
+        <div id="faq-content-4" class="hidden px-5 pb-5 pt-2 text-[13px]">
+            <div class="space-y-3 pt-3 border-t border-slate-200">
+                <div class="rounded-2xl border border-blue-100 bg-gradient-to-r from-blue-50 to-white p-4">
+                    <p class="font-bold text-blue-700 mb-2 flex items-center gap-1.5"><i class='bx bx-info-circle text-lg'></i> 1. Diketahui</p>
+                    <div class="text-xs text-blue-800/90 space-y-1"><p>Diameter (d) = <b>28 cm</b></p><p>Jari-jari (r) = 28 ÷ 2 = <b>14 cm</b>.</p><p>π = <b>22/7</b>.</p></div>
+                </div>
+                <div class="rounded-2xl border border-violet-100 bg-gradient-to-r from-violet-50 to-white p-4">
+                    <p class="font-bold text-violet-700 mb-2 flex items-center gap-1.5"><i class='bx bx-bullseye text-lg'></i> 2. Ditanya</p>
+                    <p class="text-xs text-violet-800">Luas permukaan pizza.</p>
+                </div>
+                <div class="rounded-2xl border border-amber-100 bg-gradient-to-r from-amber-50 to-white p-4">
+                    <p class="font-bold text-amber-700 mb-2 flex items-center gap-1.5"><i class='bx bx-math text-lg'></i> 3. Rumus yang digunakan</p>
+                    <p class="font-mono text-xs font-bold text-amber-900">L = π × r × r</p>
+                </div>
+                <div class="rounded-2xl border border-emerald-100 bg-gradient-to-r from-emerald-50 to-white p-4">
+                    <p class="font-bold text-emerald-700 mb-3 flex items-center gap-1.5"><i class='bx bx-list-check text-lg'></i> 4. Langkah penyelesaian</p>
+                    <div class="space-y-3"><div class="solution-step"><span class="solution-step-number">1</span><p class="text-xs text-slate-700 leading-relaxed">Cari jari-jari terlebih dahulu: r = d ÷ 2 = 28 ÷ 2 = 14 cm.</p></div><div class="solution-step"><span class="solution-step-number">2</span><p class="text-xs text-slate-700 leading-relaxed">Masukkan ke rumus: L = 22/7 × 14 × 14.</p></div><div class="solution-step"><span class="solution-step-number">3</span><p class="text-xs text-slate-700 leading-relaxed">Sederhanakan 14 ÷ 7 = 2: L = 22 × 2 × 14.</p></div><div class="solution-step"><span class="solution-step-number">4</span><p class="text-xs text-slate-700 leading-relaxed">Hitung hasilnya: L = 44 × 14 = 616.</p></div></div>
+                    <div class="mt-4 rounded-xl bg-white/80 border border-emerald-200 p-3"><p class="text-[10px] uppercase tracking-wider font-extrabold text-emerald-600 mb-1">Kesimpulan</p><p class="text-sm font-black text-emerald-800">616 cm²</p></div>
+                </div>
+                <div class="rounded-2xl bg-slate-50 border border-slate-200 p-3.5"><p class="text-[10px] uppercase tracking-wider font-extrabold text-slate-500 mb-1">Kenapa langkah ini dilakukan?</p><p class="text-xs text-slate-600 leading-relaxed">Luas menunjukkan seluruh bagian permukaan pizza. Jika ukuran yang diberikan adalah diameter, jangan langsung memasukkannya sebagai r karena jari-jari hanya setengah diameter.</p></div>
+            </div>
+        </div>
+    </article>
+<article class="example-card glass-card rounded-3xl overflow-hidden shadow-sm">
+        <button onclick="toggleFaq(5)" aria-expanded="false" aria-controls="faq-content-5" class="w-full text-left p-5 flex justify-between items-center bg-white/45 hover:bg-white/75 transition-colors">
+            <span class="pr-4"><span class="inline-flex text-[9px] uppercase tracking-wider font-extrabold text-purple-600 bg-purple-100 rounded-full px-2.5 py-1 mb-2">Contoh 5 · Luas dengan bilangan desimal</span><span class="block font-semibold text-slate-700 text-sm leading-relaxed">Sebuah meja bundar memiliki jari-jari 0,7 meter. Berapakah luas permukaan meja?</span></span>
+            <i id="faq-icon-5" class='bx bx-chevron-down text-2xl text-purple-500 transition-transform duration-300'></i>
+        </button>
+        <div id="faq-content-5" class="hidden px-5 pb-5 pt-2 text-[13px]">
+            <div class="space-y-3 pt-3 border-t border-slate-200">
+                <div class="rounded-2xl border border-blue-100 bg-gradient-to-r from-blue-50 to-white p-4">
+                    <p class="font-bold text-blue-700 mb-2 flex items-center gap-1.5"><i class='bx bx-info-circle text-lg'></i> 1. Diketahui</p>
+                    <div class="text-xs text-blue-800/90 space-y-1"><p>Jari-jari (r) = <b>0,7 m</b></p><p>Gunakan π = <b>3,14</b>.</p></div>
+                </div>
+                <div class="rounded-2xl border border-violet-100 bg-gradient-to-r from-violet-50 to-white p-4">
+                    <p class="font-bold text-violet-700 mb-2 flex items-center gap-1.5"><i class='bx bx-bullseye text-lg'></i> 2. Ditanya</p>
+                    <p class="text-xs text-violet-800">Luas permukaan meja.</p>
+                </div>
+                <div class="rounded-2xl border border-amber-100 bg-gradient-to-r from-amber-50 to-white p-4">
+                    <p class="font-bold text-amber-700 mb-2 flex items-center gap-1.5"><i class='bx bx-math text-lg'></i> 3. Rumus yang digunakan</p>
+                    <p class="font-mono text-xs font-bold text-amber-900">L = π × r × r</p>
+                </div>
+                <div class="rounded-2xl border border-emerald-100 bg-gradient-to-r from-emerald-50 to-white p-4">
+                    <p class="font-bold text-emerald-700 mb-3 flex items-center gap-1.5"><i class='bx bx-list-check text-lg'></i> 4. Langkah penyelesaian</p>
+                    <div class="space-y-3"><div class="solution-step"><span class="solution-step-number">1</span><p class="text-xs text-slate-700 leading-relaxed">Tulis rumus luas: L = π × r × r.</p></div><div class="solution-step"><span class="solution-step-number">2</span><p class="text-xs text-slate-700 leading-relaxed">Masukkan nilai jari-jari: L = 3,14 × 0,7 × 0,7.</p></div><div class="solution-step"><span class="solution-step-number">3</span><p class="text-xs text-slate-700 leading-relaxed">Hitung 0,7 × 0,7 = 0,49.</p></div><div class="solution-step"><span class="solution-step-number">4</span><p class="text-xs text-slate-700 leading-relaxed">Kalikan 3,14 × 0,49 = 1,5386.</p></div></div>
+                    <div class="mt-4 rounded-xl bg-white/80 border border-emerald-200 p-3"><p class="text-[10px] uppercase tracking-wider font-extrabold text-emerald-600 mb-1">Kesimpulan</p><p class="text-sm font-black text-emerald-800">1,5386 m²</p></div>
+                </div>
+                <div class="rounded-2xl bg-slate-50 border border-slate-200 p-3.5"><p class="text-[10px] uppercase tracking-wider font-extrabold text-slate-500 mb-1">Kenapa langkah ini dilakukan?</p><p class="text-xs text-slate-600 leading-relaxed">Bilangan desimal tetap dihitung dengan cara perkalian biasa. Perhatikan letak koma desimal dan jangan lupa satuan luas berubah menjadi meter persegi (m²).</p></div>
+            </div>
+        </div>
+    </article>
+<article class="example-card glass-card rounded-3xl overflow-hidden shadow-sm">
+        <button onclick="toggleFaq(6)" aria-expanded="false" aria-controls="faq-content-6" class="w-full text-left p-5 flex justify-between items-center bg-white/45 hover:bg-white/75 transition-colors">
+            <span class="pr-4"><span class="inline-flex text-[9px] uppercase tracking-wider font-extrabold text-sky-600 bg-sky-100 rounded-full px-2.5 py-1 mb-2">Contoh 6 · Keliling dan banyak putaran</span><span class="block font-semibold text-slate-700 text-sm leading-relaxed">Sebuah roda memiliki diameter 42 cm. Jika roda berputar 50 kali, berapa meter jarak yang ditempuh?</span></span>
+            <i id="faq-icon-6" class='bx bx-chevron-down text-2xl text-sky-500 transition-transform duration-300'></i>
+        </button>
+        <div id="faq-content-6" class="hidden px-5 pb-5 pt-2 text-[13px]">
+            <div class="space-y-3 pt-3 border-t border-slate-200">
+                <div class="rounded-2xl border border-blue-100 bg-gradient-to-r from-blue-50 to-white p-4">
+                    <p class="font-bold text-blue-700 mb-2 flex items-center gap-1.5"><i class='bx bx-info-circle text-lg'></i> 1. Diketahui</p>
+                    <div class="text-xs text-blue-800/90 space-y-1"><p>Diameter roda (d) = <b>42 cm</b></p><p>Banyak putaran = <b>50 kali</b></p><p>π = <b>22/7</b>.</p></div>
+                </div>
+                <div class="rounded-2xl border border-violet-100 bg-gradient-to-r from-violet-50 to-white p-4">
+                    <p class="font-bold text-violet-700 mb-2 flex items-center gap-1.5"><i class='bx bx-bullseye text-lg'></i> 2. Ditanya</p>
+                    <p class="text-xs text-violet-800">Jarak tempuh dalam meter.</p>
+                </div>
+                <div class="rounded-2xl border border-amber-100 bg-gradient-to-r from-amber-50 to-white p-4">
+                    <p class="font-bold text-amber-700 mb-2 flex items-center gap-1.5"><i class='bx bx-math text-lg'></i> 3. Rumus yang digunakan</p>
+                    <p class="font-mono text-xs font-bold text-amber-900">K = π × d, lalu jarak = K × jumlah putaran</p>
+                </div>
+                <div class="rounded-2xl border border-emerald-100 bg-gradient-to-r from-emerald-50 to-white p-4">
+                    <p class="font-bold text-emerald-700 mb-3 flex items-center gap-1.5"><i class='bx bx-list-check text-lg'></i> 4. Langkah penyelesaian</p>
+                    <div class="space-y-3"><div class="solution-step"><span class="solution-step-number">1</span><p class="text-xs text-slate-700 leading-relaxed">Hitung keliling roda: K = 22/7 × 42 = 22 × 6 = 132 cm.</p></div><div class="solution-step"><span class="solution-step-number">2</span><p class="text-xs text-slate-700 leading-relaxed">Satu putaran penuh menempuh jarak sepanjang satu keliling roda, yaitu 132 cm.</p></div><div class="solution-step"><span class="solution-step-number">3</span><p class="text-xs text-slate-700 leading-relaxed">Untuk 50 putaran: jarak = 132 × 50 = 6.600 cm.</p></div><div class="solution-step"><span class="solution-step-number">4</span><p class="text-xs text-slate-700 leading-relaxed">Ubah sentimeter ke meter dengan membagi 100: 6.600 ÷ 100 = 66 m.</p></div></div>
+                    <div class="mt-4 rounded-xl bg-white/80 border border-emerald-200 p-3"><p class="text-[10px] uppercase tracking-wider font-extrabold text-emerald-600 mb-1">Kesimpulan</p><p class="text-sm font-black text-emerald-800">66 meter</p></div>
+                </div>
+                <div class="rounded-2xl bg-slate-50 border border-slate-200 p-3.5"><p class="text-[10px] uppercase tracking-wider font-extrabold text-slate-500 mb-1">Kenapa langkah ini dilakukan?</p><p class="text-xs text-slate-600 leading-relaxed">Setiap satu putaran membuat roda menempuh satu keliling. Karena roda berputar 50 kali, keliling dikalikan 50. Konversi satuan dilakukan paling akhir agar perhitungan lebih mudah.</p></div>
+            </div>
+        </div>
+    </article>
+<article class="example-card glass-card rounded-3xl overflow-hidden shadow-sm">
+        <button onclick="toggleFaq(7)" aria-expanded="false" aria-controls="faq-content-7" class="w-full text-left p-5 flex justify-between items-center bg-white/45 hover:bg-white/75 transition-colors">
+            <span class="pr-4"><span class="inline-flex text-[9px] uppercase tracking-wider font-extrabold text-rose-600 bg-rose-100 rounded-full px-2.5 py-1 mb-2">Contoh 7 · Luas sebagian lingkaran</span><span class="block font-semibold text-slate-700 text-sm leading-relaxed">Taman berbentuk lingkaran memiliki diameter 42 meter. Sepertiga luas taman akan ditanami bunga. Berapa luas bagian yang ditanami bunga?</span></span>
+            <i id="faq-icon-7" class='bx bx-chevron-down text-2xl text-rose-500 transition-transform duration-300'></i>
+        </button>
+        <div id="faq-content-7" class="hidden px-5 pb-5 pt-2 text-[13px]">
+            <div class="space-y-3 pt-3 border-t border-slate-200">
+                <div class="rounded-2xl border border-blue-100 bg-gradient-to-r from-blue-50 to-white p-4">
+                    <p class="font-bold text-blue-700 mb-2 flex items-center gap-1.5"><i class='bx bx-info-circle text-lg'></i> 1. Diketahui</p>
+                    <div class="text-xs text-blue-800/90 space-y-1"><p>Diameter (d) = <b>42 m</b></p><p>Jari-jari (r) = 42 ÷ 2 = <b>21 m</b></p><p>Bagian ditanami = <b>1/3</b> luas taman.</p><p>π = <b>22/7</b>.</p></div>
+                </div>
+                <div class="rounded-2xl border border-violet-100 bg-gradient-to-r from-violet-50 to-white p-4">
+                    <p class="font-bold text-violet-700 mb-2 flex items-center gap-1.5"><i class='bx bx-bullseye text-lg'></i> 2. Ditanya</p>
+                    <p class="text-xs text-violet-800">Luas area yang ditanami bunga.</p>
+                </div>
+                <div class="rounded-2xl border border-amber-100 bg-gradient-to-r from-amber-50 to-white p-4">
+                    <p class="font-bold text-amber-700 mb-2 flex items-center gap-1.5"><i class='bx bx-math text-lg'></i> 3. Rumus yang digunakan</p>
+                    <p class="font-mono text-xs font-bold text-amber-900">L = π × r × r, kemudian luas bunga = 1/3 × L</p>
+                </div>
+                <div class="rounded-2xl border border-emerald-100 bg-gradient-to-r from-emerald-50 to-white p-4">
+                    <p class="font-bold text-emerald-700 mb-3 flex items-center gap-1.5"><i class='bx bx-list-check text-lg'></i> 4. Langkah penyelesaian</p>
+                    <div class="space-y-3"><div class="solution-step"><span class="solution-step-number">1</span><p class="text-xs text-slate-700 leading-relaxed">Ubah diameter menjadi jari-jari: r = 42 ÷ 2 = 21 m.</p></div><div class="solution-step"><span class="solution-step-number">2</span><p class="text-xs text-slate-700 leading-relaxed">Hitung luas seluruh taman: L = 22/7 × 21 × 21.</p></div><div class="solution-step"><span class="solution-step-number">3</span><p class="text-xs text-slate-700 leading-relaxed">Sederhanakan 21 ÷ 7 = 3: L = 22 × 3 × 21 = 1.386 m².</p></div><div class="solution-step"><span class="solution-step-number">4</span><p class="text-xs text-slate-700 leading-relaxed">Ambil sepertiga luas: 1/3 × 1.386 = 1.386 ÷ 3 = 462 m².</p></div></div>
+                    <div class="mt-4 rounded-xl bg-white/80 border border-emerald-200 p-3"><p class="text-[10px] uppercase tracking-wider font-extrabold text-emerald-600 mb-1">Kesimpulan</p><p class="text-sm font-black text-emerald-800">462 m² area bunga</p></div>
+                </div>
+                <div class="rounded-2xl bg-slate-50 border border-slate-200 p-3.5"><p class="text-[10px] uppercase tracking-wider font-extrabold text-slate-500 mb-1">Kenapa langkah ini dilakukan?</p><p class="text-xs text-slate-600 leading-relaxed">Soal ini memiliki dua tahap. Pertama, cari luas seluruh taman. Kedua, karena bunga hanya menempati sepertiga bagian, bagi luas taman dengan 3.</p></div>
+            </div>
+        </div>
+    </article></div>
+                    </section>
+
+                    <!-- ==================== 5. KUIS (Soal Word + Visual Animasi) ==================== -->
+                    <section id="tab-kuis" class="tab-section space-y-5">
+                        <div class="px-1 mb-2 md:text-center md:mb-6">
+                            <h2 class="text-xl md:text-2xl font-bold text-slate-700">Tantangan Kuis</h2>
+                            <p class="text-xs md:text-sm text-slate-500 mt-1">Uji pemahamanmu dengan kuis interaktif.</p>
+                        </div>
+
+                        <!-- Area mulai kuis -->
+                        <div id="quiz-start-area" class="glass-card p-8 rounded-[2rem] text-center animate-soft-pop relative overflow-hidden">
+                            <div class="absolute -right-12 -top-12 w-36 h-36 rounded-full bg-fuchsia-200/50 blur-2xl"></div>
+                            <div class="absolute -left-12 bottom-0 w-32 h-32 rounded-full bg-cyan-200/50 blur-2xl"></div>
+                            <div class="relative z-10">
+                                <div class="w-20 h-20 mx-auto bg-gradient-to-br from-indigo-500 via-violet-500 to-pink-500 rounded-[1.7rem] rotate-3 flex items-center justify-center text-white text-4xl mb-5 shadow-xl shadow-violet-300/50 animate-[float_3s_ease-in-out_infinite]">
+                                    <i class='bx bx-brain'></i>
+                                </div>
+                                <span class="inline-flex rounded-full bg-violet-100 text-violet-700 px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider mb-3">10 soal interaktif</span>
+                                <h3 class="text-lg font-bold text-slate-800 mb-2">Siap Menghadapi Tantangan? ✨</h3>
+                                <p class="text-xs md:text-sm text-slate-500 mb-6 max-w-sm mx-auto">Setiap soal dilengkapi ilustrasi dan pembahasan rinci. Jawaban benar maupun salah akan mendapatkan penjelasan langkah demi langkah.</p>
+                                <input type="text" id="quiz-name-input" placeholder="Tulis namamu di sini..." class="w-full max-w-sm mx-auto block bg-white/90 border-2 border-violet-100 text-slate-700 rounded-2xl px-5 py-4 mb-5 outline-none focus:border-violet-400 focus:ring-4 focus:ring-violet-500/20 text-center font-semibold text-base shadow-inner transition-all">
+                                <button onclick="startQuizEngine()" class="w-full max-w-sm mx-auto bg-gradient-to-r from-indigo-600 via-violet-600 to-pink-500 text-white font-bold py-4 rounded-2xl shadow-lg shadow-violet-500/30 hover:scale-[1.02] active:scale-95 transition-transform flex justify-center items-center gap-2">
+                                    Mulai Belajar <i class='bx bx-rocket text-2xl'></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Area kuis aktif -->
+                        <div id="quiz-area" class="hidden glass-card p-5 md:p-8 rounded-[2rem] animate-soft-pop">
+                            <div class="flex justify-between items-center gap-3 mb-5">
+                                <span class="bg-indigo-100 text-indigo-700 text-[11px] font-extrabold py-2 px-3 rounded-xl" id="quiz-progress-text">Soal 1 dari 10</span>
+                                <div class="flex items-center gap-2"><span class="text-[10px] font-bold text-slate-400">PROGRES</span><div class="flex gap-1" id="quiz-progress-dots"></div></div>
+                            </div>
+                            <div class="w-full h-1.5 rounded-full bg-slate-100 overflow-hidden mb-5"><div id="quiz-progress-bar" class="h-full rounded-full bg-gradient-to-r from-cyan-400 via-indigo-500 to-fuchsia-500 transition-all duration-500" style="width:10%"></div></div>
+
+                            <div id="quiz-visual" class="quiz-visual rounded-[1.5rem] p-3 md:p-4 mb-5" aria-label="Ilustrasi soal"></div>
+                            <div class="flex items-center gap-2 mb-3"><span id="quiz-topic-chip" class="rounded-full bg-pink-100 text-pink-700 px-3 py-1 text-[9px] font-extrabold uppercase tracking-wider">Visualisasi</span><span class="text-[10px] font-semibold text-slate-400">Baca soal dengan teliti</span></div>
+                            <h3 id="quiz-q-text" class="text-sm md:text-base font-bold text-slate-700 mb-5 leading-relaxed bg-white/75 p-4 md:p-5 rounded-2xl border border-white shadow-sm">Memuat pertanyaan...</h3>
+                            <div id="quiz-options-container" class="space-y-3"></div>
+
+                            <!-- Pembahasan muncul untuk jawaban benar dan salah -->
+                            <div id="quiz-feedback" class="hidden mt-5 solution-panel rounded-[1.5rem] overflow-hidden border border-white shadow-lg">
+                                <div id="quiz-feedback-heading" class="p-4 text-sm font-extrabold"></div>
+                                <div class="p-4 md:p-5 bg-white/85">
+                                    <div class="flex items-center gap-2 mb-3"><i class='bx bx-book-open text-xl text-indigo-500'></i><h4 class="text-sm font-extrabold text-slate-800">Pembahasan langkah demi langkah</h4></div>
+                                    <div id="quiz-solution" class="space-y-3"></div>
+                                    <div id="quiz-final-answer" class="mt-4 rounded-xl p-3 bg-gradient-to-r from-indigo-50 to-fuchsia-50 border border-indigo-100 text-sm font-extrabold text-indigo-800"></div>
+                                </div>
+                            </div>
+                            <button id="btn-next-q" onclick="nextQuestion()" class="hidden w-full mt-5 bg-gradient-to-r from-slate-800 to-indigo-900 text-white text-sm font-bold py-4 rounded-xl shadow-lg transition-transform hover:scale-[1.01] active:scale-95 flex justify-center items-center gap-2">
+                                Lanjut ke Soal Berikutnya <i class='bx bx-right-arrow-alt text-xl'></i>
+                            </button>
+                        </div>
+
+                        <!-- Hasil akhir -->
+                        <div id="quiz-result-area" class="hidden glass-card p-8 rounded-[2.5rem] text-center relative overflow-hidden animate-soft-pop">
+                            <div class="absolute inset-0 bg-gradient-to-b from-violet-100/70 via-pink-50/40 to-transparent"></div>
+                            <div class="relative z-10">
+                                <div class="w-24 h-24 mx-auto rounded-[2rem] rotate-3 bg-gradient-to-br from-amber-100 to-pink-100 flex items-center justify-center mb-4 shadow-xl border-4 border-white text-amber-500">
+                                    <i class='bx bxs-trophy text-5xl animate-pulse-slow'></i>
+                                </div>
+                                <h3 class="text-xl md:text-2xl font-black text-slate-800 mb-1">Selesai, <span id="quiz-player-name" class="text-violet-600">Sobat!</span> 🎉</h3>
+                                <p class="text-sm text-slate-500 mb-6">Kamu sudah menyelesaikan seluruh tantangan.</p>
+                                <div class="w-36 h-36 mx-auto bg-white rounded-[2rem] shadow-inner border-2 border-violet-100 flex items-center justify-center mb-5 rotate-2 hover:rotate-0 transition-transform">
+                                    <div><div class="text-6xl font-black text-transparent bg-clip-text bg-gradient-to-br from-cyan-500 via-violet-500 to-pink-500" id="quiz-score-display">100</div><p class="text-[10px] font-extrabold text-slate-400 tracking-widest">NILAI</p></div>
+                                </div>
+                                <p id="quiz-summary-text" class="text-xs md:text-sm text-slate-600 mb-6"></p>
+                                <button onclick="initQuiz()" class="w-full max-w-sm mx-auto bg-white border-2 border-violet-200 text-violet-700 text-sm font-bold py-4 rounded-xl hover:bg-violet-50 transition-colors shadow-sm flex justify-center items-center gap-2">
+                                    <i class='bx bx-refresh text-xl'></i> Coba Kuis Lagi
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Gambar Profil -->
+    <div id="imageModal" class="fixed inset-0 z-50 hidden bg-slate-900/90 backdrop-blur-sm flex items-center justify-center opacity-0 transition-opacity duration-300">
+        <button onclick="closeModal()" class="absolute top-6 right-6 w-12 h-12 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-white text-3xl transition-colors"><i class='bx bx-x'></i></button>
+        <img src="./image_22a555.jpg" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Fahrezi+Sauqi&background=a78bfa&color=fff&size=500';" alt="Foto Fahrezi" class="max-w-[90%] max-h-[90%] md:max-w-2xl object-contain rounded-2xl shadow-2xl scale-95 transition-transform duration-300" id="modalImg">
+    </div>
+
+    <script>
+        const dateOptions = { weekday: 'long', day: 'numeric', month: 'short' };
+        document.getElementById('header-date').innerText = new Date().toLocaleDateString('id-ID', dateOptions);
+
+        function openModal() {
+    const modal = document.getElementById('imageModal');
+    const img = document.getElementById('modalImg');
+
+    // Ambil foto yang sedang tampil di Header
+    const profileImg = document.querySelector('header img');
+
+    // Gunakan foto yang sama untuk Modal
+    img.src = profileImg.currentSrc || profileImg.src;
+
+    modal.classList.remove('hidden');
+
+    setTimeout(() => {
+        modal.classList.add('modal-active');
+        img.classList.add('modal-img-active');
+    }, 10);
+}
+
+        function closeModal() {
+            const modal = document.getElementById('imageModal');
+            const img = document.getElementById('modalImg');
+            modal.classList.remove('modal-active');
+            img.classList.remove('modal-img-active');
+            setTimeout(() => { modal.classList.add('hidden'); }, 300);
+        }
+
+        document.getElementById('imageModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-section').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+            
+            document.getElementById(`tab-${tabId}`).classList.add('active');
+            document.getElementById(`nav-${tabId}`).classList.add('active');
+            document.getElementById('main-scroll').scrollTo({top: 0, behavior: 'smooth'});
+            
+            if (tabId === 'materi') resetSVG();
+        }
+
+        const svgElements = {
+            luas: document.getElementById('svg-luas'),
+            keliling: document.getElementById('svg-keliling'),
+            diameter: document.getElementById('svg-diameter'),
+            jari: document.getElementById('svg-jari'),
+            pusat: document.getElementById('svg-pusat')
+        };
+
+        function resetSVG() {
+            svgElements.luas.setAttribute('fill', 'transparent');
+            svgElements.keliling.setAttribute('stroke', '#cbd5e1');
+            svgElements.keliling.setAttribute('stroke-width', '4');
+            svgElements.keliling.classList.remove('text-indigo-500', 'svg-glow');
+            svgElements.diameter.setAttribute('stroke', 'transparent');
+            svgElements.diameter.classList.remove('text-amber-500', 'svg-glow');
+            svgElements.jari.setAttribute('stroke', '#cbd5e1');
+            svgElements.jari.setAttribute('stroke-width', '3');
+            svgElements.jari.classList.remove('text-teal-500', 'svg-glow');
+            svgElements.pusat.setAttribute('fill', '#94a3b8');
+            svgElements.pusat.setAttribute('r', '4');
+            svgElements.pusat.classList.remove('text-slate-800', 'svg-glow');
+        }
+
+        function highlightCircle(part) {
+            resetSVG(); 
+            if (part === 'pusat') {
+                svgElements.pusat.setAttribute('fill', 'currentColor');
+                svgElements.pusat.setAttribute('r', '8');
+                svgElements.pusat.classList.add('text-slate-800', 'svg-glow');
+                svgElements.keliling.setAttribute('stroke', '#e2e8f0');
+                svgElements.jari.setAttribute('stroke', '#e2e8f0');
+            } 
+            else if (part === 'jari') {
+                svgElements.jari.setAttribute('stroke', 'currentColor');
+                svgElements.jari.setAttribute('stroke-width', '6');
+                svgElements.jari.classList.add('text-teal-500', 'svg-glow');
+            }
+            else if (part === 'diameter') {
+                svgElements.diameter.setAttribute('stroke', 'currentColor');
+                svgElements.diameter.classList.add('text-amber-500', 'svg-glow');
+                svgElements.jari.setAttribute('stroke', 'transparent');
+            }
+            else if (part === 'keliling') {
+                svgElements.keliling.setAttribute('stroke', 'currentColor');
+                svgElements.keliling.setAttribute('stroke-width', '6');
+                svgElements.keliling.classList.add('text-indigo-500', 'svg-glow');
+            }
+            else if (part === 'luas') {
+                svgElements.luas.setAttribute('fill', 'rgba(167, 139, 250, 0.4)');
+                svgElements.keliling.setAttribute('stroke', '#a78bfa');
+                svgElements.jari.setAttribute('stroke', 'transparent');
+            }
+        }
+
+        let calcMode = 'r';
+        function switchCalcMode(mode) {
+            calcMode = mode;
+            const btnR = document.getElementById('calc-btn-r');
+            const btnD = document.getElementById('calc-btn-d');
+            const label = document.getElementById('calc-label');
+
+            if(mode === 'r') {
+                btnR.className = "flex-1 py-2.5 text-xs font-semibold rounded-xl bg-gradient-to-r from-purple-500 to-indigo-500 text-white shadow-md transition-all";
+                btnD.className = "flex-1 py-2.5 text-xs font-medium rounded-xl text-slate-500 hover:text-slate-700 transition-all bg-transparent";
+                label.innerText = "Nilai Jari-jari (cm)";
+            } else {
+                btnD.className = "flex-1 py-2.5 text-xs font-semibold rounded-xl bg-gradient-to-r from-purple-500 to-indigo-500 text-white shadow-md transition-all";
+                btnR.className = "flex-1 py-2.5 text-xs font-medium rounded-xl text-slate-500 hover:text-slate-700 transition-all bg-transparent";
+                label.innerText = "Nilai Diameter (cm)";
+            }
+            document.getElementById('calc-result').classList.add('hidden');
+            document.getElementById('calc-input').value = '';
+        }
+
+        function loadChallenge(mode, value) {
+            switchCalcMode(mode);
+            const input = document.getElementById('calc-input');
+            input.value = value;
+            input.focus();
+            document.getElementById('calc-result').classList.add('hidden');
+            input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function calculateData() {
+            const val = parseFloat(document.getElementById('calc-input').value);
+            const inputEl = document.getElementById('calc-input');
+            
+            if(!val || val <= 0) {
+                inputEl.classList.add('border-pink-400', 'bg-pink-50');
+                setTimeout(() => inputEl.classList.remove('border-pink-400', 'bg-pink-50'), 800);
+                return;
+            }
+
+            let r = calcMode === 'r' ? val : val / 2;
+            let d = calcMode === 'd' ? val : val * 2;
+            let usePi227 = (r % 7 === 0);
+            let piVal = usePi227 ? 22/7 : 3.14;
+            let piStr = usePi227 ? "22/7" : "3.14";
+
+            let area = piVal * r * r;
+            let displayArea = (area % 1 !== 0) ? area.toFixed(2).replace(/\.?0+$/, '') : area;
+
+            let htmlDiketahui = calcMode === 'r' ? `Jari-jari (r) = <b>${r} cm</b>` : `Diameter (d) = ${d} cm, maka <b>r = ${r} cm</b>`;
+            htmlDiketahui += `<br><span class="text-[11px] text-slate-500">Karena r ${usePi227 ? 'kelipatan 7' : 'bukan kelipatan 7'}, gunakan <b>π = ${piStr}</b></span>`;
+
+            let htmlSolve = `L = ${piStr} × ${r} × ${r}`;
+            if(usePi227) {
+                htmlSolve += `<br>L = 22 × (${r} ÷ 7) × ${r}`;
+                htmlSolve += `<br>L = 22 × ${r/7} × ${r}`;
+            } else {
+                htmlSolve += `<br>L = 3.14 × ${r * r}`;
+            }
+            htmlSolve += `<br>L = <span class="text-pink-600 font-bold text-sm">${displayArea} cm²</span>`;
+
+            document.getElementById('res-diketahui').innerHTML = htmlDiketahui;
+            document.getElementById('res-penyelesaian').innerHTML = htmlSolve;
+            document.getElementById('res-hasil').innerText = displayArea;
+
+            const resBox = document.getElementById('calc-result');
+            resBox.classList.remove('hidden');
+            setTimeout(() => { document.getElementById('main-scroll').scrollTo({top: resBox.offsetTop - 20, behavior: 'smooth'}); }, 100);
+        }
+
+        function toggleFaq(id) {
+            const content = document.getElementById(`faq-content-${id}`);
+            const icon = document.getElementById(`faq-icon-${id}`);
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden'); icon.style.transform = 'rotate(180deg)';
+            } else {
+                content.classList.add('hidden'); icon.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        // --- BANK KUIS: 10 SOAL DENGAN ILUSTRASI DAN PEMBAHASAN ---
+        const quizData = [
+            {
+                topic: "Membandingkan luas", q: "Sebuah restoran menawarkan promo dengan harga sama. Pilihan A adalah 1 pizza besar berdiameter 40 cm. Pilihan B adalah 2 pizza sedang yang masing-masing berdiameter 25 cm. Pilihan mana yang memberikan jumlah luas pizza lebih besar?",
+                o: ["Pilihan A — 1 pizza besar", "Pilihan B — 2 pizza sedang", "Keduanya sama luas"], a: 0, icon: "bx-pizza", color: "orange",
+                visual: `<svg viewBox="0 0 320 150" role="img" aria-label="Perbandingan satu pizza besar dan dua pizza sedang"><circle class="diagram-circle" cx="82" cy="66" r="48" fill="#FDBA74" stroke="#EA580C" stroke-width="4"/><circle cx="82" cy="66" r="39" fill="#FDE68A" stroke="#F59E0B" stroke-width="2"/><path d="M82 27 L82 105 M43 66 H121 M54 38 L110 94 M110 38 L54 94" stroke="#F97316" stroke-width="2"/><circle class="diagram-circle" cx="205" cy="49" r="29" fill="#FBCFE8" stroke="#DB2777" stroke-width="3"/><circle cx="205" cy="49" r="22" fill="#FDE68A"/><circle cx="246" cy="91" r="29" fill="#FBCFE8" stroke="#DB2777" stroke-width="3"/><circle cx="246" cy="91" r="22" fill="#FDE68A"/><text x="82" y="137" text-anchor="middle" font-size="11" font-weight="700" fill="#9A3412">A · d = 40 cm</text><text x="224" y="137" text-anchor="middle" font-size="11" font-weight="700" fill="#9D174D">B · 2 × d = 25 cm</text></svg>`,
+                solution: ["Pilihan A: diameter 40 cm, jadi jari-jari = 40 ÷ 2 = 20 cm.", "Luas pizza A = 3,14 × 20 × 20 = 3,14 × 400 = 1.256 cm².", "Pilihan B: satu pizza berdiameter 25 cm, jadi jari-jari = 12,5 cm.", "Luas satu pizza B = 3,14 × 12,5 × 12,5 = 490,625 cm². Karena ada 2 pizza, totalnya = 2 × 490,625 = 981,25 cm².", "Bandingkan: 1.256 cm² lebih besar daripada 981,25 cm²."],
+                final: "Jawaban: Pilihan A. Satu pizza besar memiliki luas 1.256 cm², lebih besar daripada total dua pizza sedang (981,25 cm²)."
+            },
+            {
+                topic: "Keliling dan jarak", q: "Roda sepeda Andi memiliki jari-jari 35 cm. Jika roda berputar 1.000 kali, berapakah jarak yang ditempuh? Gunakan π = 22/7.",
+                o: ["220 meter", "2.200 meter", "22.000 meter"], a: 1, icon: "bx-cycling", color: "blue",
+                visual: `<svg viewBox="0 0 320 150" role="img" aria-label="Ilustrasi roda sepeda dengan jari-jari 35 cm"><path d="M18 112 H302" stroke="#93C5FD" stroke-width="5" stroke-linecap="round"/><path d="M25 121 H295" stroke="#CBD5E1" stroke-width="2" stroke-dasharray="5 7"/><circle class="diagram-circle" cx="102" cy="70" r="45" fill="#DBEAFE" stroke="#2563EB" stroke-width="5"/><circle cx="102" cy="70" r="6" fill="#1D4ED8"/><path d="M102 70 L102 25" stroke="#0F766E" stroke-width="4" stroke-linecap="round"/><path d="M97 31 L102 24 L107 31" fill="none" stroke="#0F766E" stroke-width="2"/><text x="115" y="42" font-size="11" font-weight="700" fill="#0F766E">35 cm</text><path d="M175 70 H274 M263 60 L274 70 L263 80" fill="none" stroke="#7C3AED" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><text x="222" y="53" text-anchor="middle" font-size="11" font-weight="700" fill="#6D28D9">1.000 putaran</text><text x="160" y="140" text-anchor="middle" font-size="10" font-weight="700" fill="#64748B">Satu putaran = satu keliling roda</text></svg>`,
+                solution: ["Diketahui jari-jari r = 35 cm dan jumlah putaran = 1.000 kali.", "Cari keliling roda: K = 2 × π × r = 2 × 22/7 × 35.", "Sederhanakan 35 ÷ 7 = 5, sehingga K = 2 × 22 × 5 = 220 cm.", "Dalam 1.000 putaran, jarak = 220 × 1.000 = 220.000 cm.", "Ubah cm ke meter: 220.000 ÷ 100 = 2.200 meter."],
+                final: "Jawaban: 2.200 meter. Ingat, satu putaran penuh sama dengan satu keliling roda."
+            },
+            {
+                topic: "Luas dan biaya", q: "Taman kota berbentuk lingkaran memiliki diameter 28 m. Setengah bagian taman akan ditanami rumput. Jika biaya penanaman Rp15.000 per m², berapa biaya yang dibutuhkan? Gunakan π = 22/7.",
+                o: ["Rp4.620.000", "Rp9.240.000", "Rp308.000"], a: 0, icon: "bx-leaf", color: "emerald",
+                visual: `<svg viewBox="0 0 320 150" role="img" aria-label="Taman lingkaran dengan setengah area ditanami rumput"><defs><clipPath id="parkClip"><circle cx="160" cy="68" r="52"/></clipPath></defs><circle class="diagram-circle" cx="160" cy="68" r="52" fill="#D1FAE5" stroke="#059669" stroke-width="4"/><g clip-path="url(#parkClip)"><path d="M160 16 A52 52 0 0 1 160 120 Z" fill="#6EE7B7"/><path d="M108 68 H212" stroke="#047857" stroke-width="2" stroke-dasharray="5 4"/></g><path d="M160 68 L160 16" stroke="#0F766E" stroke-width="3"/><circle cx="160" cy="68" r="3.5" fill="#065F46"/><text x="160" y="137" text-anchor="middle" font-size="11" font-weight="700" fill="#047857">Setengah area ditanami rumput</text></svg>`,
+                solution: ["Diameter taman 28 m, sehingga jari-jari r = 28 ÷ 2 = 14 m.", "Luas seluruh taman = π × r × r = 22/7 × 14 × 14 = 616 m².", "Yang ditanami hanya setengah: 616 ÷ 2 = 308 m².", "Biaya = luas yang ditanami × harga per m² = 308 × Rp15.000.", "308 × 15.000 = 4.620.000."],
+                final: "Jawaban: Rp4.620.000. Biaya dihitung dari luas yang ditanami saja, bukan seluruh luas taman."
+            },
+            {
+                topic: "Membandingkan ukuran", q: "Di lahan berbentuk persegi dengan panjang sisi 10 m akan dibuat kolam berbentuk lingkaran berdiameter 14 m. Apakah kolam dapat dimasukkan seluruhnya ke dalam lahan?",
+                o: ["Muat, karena luasnya mencukupi", "Tidak muat, karena diameter lebih besar dari sisi lahan", "Muat, karena kelilingnya kecil"], a: 1, icon: "bx-water", color: "cyan",
+                visual: `<svg viewBox="0 0 320 150" role="img" aria-label="Perbandingan persegi sisi 10 meter dan lingkaran diameter 14 meter"><rect x="30" y="31" width="100" height="100" rx="3" fill="#DBEAFE" stroke="#2563EB" stroke-width="3"/><circle class="diagram-circle" cx="226" cy="81" r="59" fill="#A5F3FC" fill-opacity=".85" stroke="#0891B2" stroke-width="4"/><path d="M167 81 H285" stroke="#0E7490" stroke-width="2" stroke-dasharray="5 4"/><text x="80" y="23" text-anchor="middle" font-size="11" font-weight="700" fill="#1D4ED8">10 m</text><text x="226" y="151" text-anchor="middle" font-size="11" font-weight="700" fill="#0E7490">Diameter 14 m</text><text x="80" y="84" text-anchor="middle" font-size="10" font-weight="700" fill="#1E40AF">Lahan</text></svg>`,
+                solution: ["Sisi lahan persegi = 10 m. Artinya, lebar lahan hanya 10 m.", "Diameter kolam = 14 m. Diameter merupakan ukuran terlebar lingkaran.", "Bandingkan ukuran terlebar kolam dengan lebar lahan: 14 m > 10 m.", "Karena kolam lebih lebar 4 m daripada sisi lahan, kolam tidak dapat masuk seluruhnya."],
+                final: "Jawaban: Tidak muat. Diameter kolam 14 m lebih besar daripada sisi lahan 10 m."
+            },
+            {
+                topic: "Keliling dan pembagian", q: "Area bermain berbentuk lingkaran memiliki diameter 56 m. Pohon akan ditanam di sekeliling area dengan jarak antarpohon 4 m. Berapa pohon yang dibutuhkan? Gunakan π = 22/7.",
+                o: ["22 pohon", "44 pohon", "88 pohon"], a: 1, icon: "bx-tree", color: "teal",
+                visual: `<svg viewBox="0 0 320 150" role="img" aria-label="Area bermain lingkaran dengan pohon-pohon di sekelilingnya"><circle class="diagram-circle" cx="160" cy="72" r="48" fill="#D1FAE5" stroke="#0D9488" stroke-width="3"/><circle cx="160" cy="72" r="35" fill="#A7F3D0"/><g fill="#16A34A" stroke="#166534" stroke-width="1.5"><path d="M160 9 l-9 14 h18z M155 22 h10 v7 h-10z"/><path d="M226 32 l-9 14 h18z M221 45 h10 v7 h-10z"/><path d="M245 82 l-9 14 h18z M240 95 h10 v7 h-10z"/><path d="M94 32 l-9 14 h18z M89 45 h10 v7 h-10z"/><path d="M75 82 l-9 14 h18z M70 95 h10 v7 h-10z"/><path d="M160 126 l-9 14 h18z M155 139 h10 v7 h-10z"/></g><text x="160" y="76" text-anchor="middle" font-size="10" font-weight="700" fill="#065F46">Area bermain</text><text x="160" y="147" text-anchor="middle" font-size="10" font-weight="700" fill="#0F766E">Pohon mengelilingi tepi</text></svg>`,
+                solution: ["Diameter area = 56 m.", "Hitung keliling: K = π × d = 22/7 × 56 = 22 × 8 = 176 m.", "Pohon dipasang setiap 4 m di sepanjang keliling.", "Jumlah pohon = keliling ÷ jarak antarpohon = 176 ÷ 4 = 44."],
+                final: "Jawaban: 44 pohon. Keliling menunjukkan panjang jalur penuh yang akan dipasangi pohon."
+            },
+            {
+                topic: "Luas lingkaran", q: "Sebuah pizza memiliki jari-jari 14 cm. Berapakah luas permukaan pizza? Gunakan π = 22/7.",
+                o: ["154 cm²", "308 cm²", "616 cm²"], a: 2, icon: "bx-cookie", color: "orange",
+                visual: `<svg viewBox="0 0 320 150" role="img" aria-label="Pizza lingkaran dengan jari-jari 14 sentimeter"><circle class="diagram-circle" cx="160" cy="72" r="53" fill="#FDE68A" stroke="#D97706" stroke-width="4"/><circle cx="160" cy="72" r="44" fill="none" stroke="#F59E0B" stroke-width="3" stroke-dasharray="3 5"/><g fill="#EF4444"><circle cx="140" cy="49" r="4"/><circle cx="176" cy="50" r="4"/><circle cx="185" cy="85" r="4"/><circle cx="147" cy="92" r="4"/></g><path d="M160 72 L207 72" stroke="#7C3AED" stroke-width="3"/><circle cx="160" cy="72" r="3" fill="#7C3AED"/><text x="184" y="63" font-size="11" font-weight="700" fill="#6D28D9">14 cm</text><text x="160" y="140" text-anchor="middle" font-size="11" font-weight="700" fill="#92400E">Jari-jari pizza = 14 cm</text></svg>`,
+                solution: ["Diketahui jari-jari r = 14 cm.", "Gunakan rumus luas: L = π × r × r.", "Masukkan nilai: L = 22/7 × 14 × 14.", "Sederhanakan 14 ÷ 7 = 2, sehingga L = 22 × 2 × 14.", "Hitung 44 × 14 = 616 cm²."],
+                final: "Jawaban: 616 cm². Jangan tertukar: luas menggunakan r × r, sedangkan keliling menghitung garis tepi."
+            },
+            {
+                topic: "Keliling lingkaran", q: "Sebuah meja bundar memiliki diameter 70 cm. Berapa panjang pita yang dibutuhkan untuk mengelilingi tepi meja? Gunakan π = 22/7.",
+                o: ["110 cm", "220 cm", "440 cm"], a: 1, icon: "bx-circle-three-quarter", color: "pink",
+                visual: `<svg viewBox="0 0 320 150" role="img" aria-label="Meja bundar dengan garis diameter 70 sentimeter"><ellipse cx="160" cy="119" rx="72" ry="12" fill="#CBD5E1" opacity=".55"/><circle class="diagram-circle" cx="160" cy="67" r="53" fill="#FBCFE8" stroke="#DB2777" stroke-width="4"/><path d="M107 67 H213" stroke="#9D174D" stroke-width="3" stroke-dasharray="6 4"/><circle cx="160" cy="67" r="3.5" fill="#9D174D"/><text x="160" y="53" text-anchor="middle" font-size="11" font-weight="700" fill="#9D174D">70 cm</text><text x="160" y="145" text-anchor="middle" font-size="11" font-weight="700" fill="#9D174D">Pita mengikuti seluruh tepi meja</text></svg>`,
+                solution: ["Diameter meja d = 70 cm.", "Yang dicari adalah panjang pita di sekeliling meja, yaitu keliling.", "Gunakan K = π × d = 22/7 × 70.", "Sederhanakan 70 ÷ 7 = 10, lalu K = 22 × 10 = 220 cm."],
+                final: "Jawaban: 220 cm pita. Keliling adalah panjang seluruh garis tepi lingkaran."
+            },
+            {
+                topic: "Luas bilangan desimal", q: "Lantai bundar memiliki jari-jari 3,5 meter. Berapakah luas lantai tersebut? Gunakan π = 22/7.",
+                o: ["19,25 m²", "38,5 m²", "77 m²"], a: 1, icon: "bx-home-heart", color: "violet",
+                visual: `<svg viewBox="0 0 320 150" role="img" aria-label="Lantai bundar berjari-jari 3,5 meter"><circle class="diagram-circle" cx="160" cy="70" r="53" fill="#EDE9FE" stroke="#7C3AED" stroke-width="4"/><path d="M160 70 L207 70" stroke="#6D28D9" stroke-width="3"/><path d="M160 70 L160 17" stroke="#A78BFA" stroke-width="2" stroke-dasharray="4 4"/><circle cx="160" cy="70" r="4" fill="#6D28D9"/><text x="183" y="61" font-size="11" font-weight="700" fill="#6D28D9">3,5 m</text><text x="160" y="140" text-anchor="middle" font-size="11" font-weight="700" fill="#6D28D9">Lantai berbentuk lingkaran</text></svg>`,
+                solution: ["Jari-jari lantai r = 3,5 m.", "Gunakan rumus L = π × r × r.", "Masukkan nilai: L = 22/7 × 3,5 × 3,5.", "Hitung 3,5 ÷ 7 = 0,5, sehingga L = 22 × 0,5 × 3,5.", "22 × 0,5 = 11, lalu 11 × 3,5 = 38,5 m²."],
+                final: "Jawaban: 38,5 m². Hasil luas memakai satuan meter persegi (m²), bukan meter."
+            },
+            {
+                topic: "Luas sebagian dan biaya", q: "Kolam berbentuk lingkaran memiliki diameter 14 m. Setengah bagian dasar kolam akan dipasang ubin dengan biaya Rp20.000 per m². Berapa biaya pemasangan ubin? Gunakan π = 22/7.",
+                o: ["Rp770.000", "Rp1.540.000", "Rp3.080.000"], a: 1, icon: "bx-swim", color: "cyan",
+                visual: `<svg viewBox="0 0 320 150" role="img" aria-label="Kolam lingkaran dengan setengah bagian berubin"><defs><clipPath id="poolClip"><circle cx="160" cy="68" r="52"/></clipPath><pattern id="tilePattern" width="12" height="12" patternUnits="userSpaceOnUse"><path d="M0 0 H12 V12" fill="none" stroke="#0E7490" stroke-width="1"/></pattern></defs><circle class="diagram-circle" cx="160" cy="68" r="52" fill="#A5F3FC" stroke="#0891B2" stroke-width="4"/><g clip-path="url(#poolClip)"><path d="M160 16 A52 52 0 0 1 160 120 Z" fill="#67E8F9"/><path d="M160 16 A52 52 0 0 1 160 120 Z" fill="url(#tilePattern)"/><path d="M160 16 V120" stroke="#0E7490" stroke-width="2" stroke-dasharray="4 3"/></g><text x="129" y="72" text-anchor="middle" font-size="10" font-weight="700" fill="#155E75">Air</text><text x="190" y="72" text-anchor="middle" font-size="10" font-weight="700" fill="#155E75">Ubin</text><text x="160" y="140" text-anchor="middle" font-size="11" font-weight="700" fill="#0E7490">Setengah dasar dipasang ubin</text></svg>`,
+                solution: ["Diameter kolam 14 m, jadi jari-jari r = 14 ÷ 2 = 7 m.", "Luas seluruh kolam = 22/7 × 7 × 7 = 154 m².", "Bagian yang dipasang ubin hanya setengah: 154 ÷ 2 = 77 m².", "Biaya = 77 × Rp20.000.", "77 × 20.000 = Rp1.540.000."],
+                final: "Jawaban: Rp1.540.000. Hitung luas bagian yang dipasangi ubin terlebih dahulu, kemudian kalikan dengan biaya per meter persegi."
+            },
+            {
+                topic: "Keliling dan putaran", q: "Roda kecil memiliki jari-jari 21 cm. Jika roda berputar 50 kali, berapa meter jarak yang ditempuh? Gunakan π = 22/7.",
+                o: ["33 meter", "66 meter", "132 meter"], a: 1, icon: "bx-cycling", color: "indigo",
+                visual: `<svg viewBox="0 0 320 150" role="img" aria-label="Roda dengan jari-jari 21 sentimeter dan 50 putaran"><circle class="diagram-circle" cx="92" cy="68" r="48" fill="#C7D2FE" stroke="#4F46E5" stroke-width="5"/><circle cx="92" cy="68" r="6" fill="#3730A3"/><path d="M92 68 L92 20" stroke="#7C3AED" stroke-width="3"/><text x="105" y="37" font-size="11" font-weight="700" fill="#6D28D9">21 cm</text><path d="M160 68 H285 M273 57 L285 68 L273 79" fill="none" stroke="#0D9488" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><text x="222" y="50" text-anchor="middle" font-size="12" font-weight="800" fill="#0F766E">50 putaran</text><text x="160" y="137" text-anchor="middle" font-size="11" font-weight="700" fill="#4338CA">Satu putaran = satu keliling</text></svg>`,
+                solution: ["Jari-jari roda r = 21 cm dan jumlah putaran = 50 kali.", "Keliling roda K = 2 × π × r = 2 × 22/7 × 21.", "Sederhanakan 21 ÷ 7 = 3, maka K = 2 × 22 × 3 = 132 cm.", "Jarak untuk 50 putaran = 132 × 50 = 6.600 cm.", "Konversi ke meter: 6.600 ÷ 100 = 66 meter."],
+                final: "Jawaban: 66 meter. Kalikan keliling dengan banyak putaran, kemudian ubah cm menjadi meter."
+            }
+        ];
+
+        let currQ = 0;
+        let score = 0;
+        let playerName = "Sobat Circula";
+
+        function initQuiz() {
+            currQ = 0;
+            score = 0;
+            document.getElementById('quiz-result-area').classList.add('hidden');
+            document.getElementById('quiz-area').classList.add('hidden');
+            document.getElementById('quiz-start-area').classList.remove('hidden');
+            document.getElementById('quiz-name-input').value = '';
+        }
+
+        function startQuizEngine() {
+            const inputName = document.getElementById('quiz-name-input').value.trim();
+            playerName = inputName || "Sobat Circula";
+            document.getElementById('quiz-start-area').classList.add('hidden');
+            document.getElementById('quiz-area').classList.remove('hidden');
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const current = quizData[currQ];
+            document.getElementById('quiz-progress-text').innerText = `Soal ${currQ + 1} dari ${quizData.length}`;
+            document.getElementById('quiz-progress-bar').style.width = `${((currQ + 1) / quizData.length) * 100}%`;
+            let dotsHtml = '';
+            for (let i = 0; i < quizData.length; i++) {
+                dotsHtml += i < currQ
+                    ? '<span class="w-2 h-2 rounded-full bg-emerald-400"></span>'
+                    : i === currQ
+                        ? '<span class="w-4 h-2 rounded-full bg-violet-600"></span>'
+                        : '<span class="w-2 h-2 rounded-full bg-slate-200"></span>';
+            }
+            document.getElementById('quiz-progress-dots').innerHTML = dotsHtml;
+            document.getElementById('quiz-visual').innerHTML = current.visual;
+            document.getElementById('quiz-topic-chip').innerText = current.topic;
+            document.getElementById('quiz-q-text').innerText = current.q;
+            document.getElementById('btn-next-q').classList.add('hidden');
+            document.getElementById('quiz-feedback').classList.add('hidden');
+
+            const optionsBox = document.getElementById('quiz-options-container');
+            optionsBox.innerHTML = '';
+            current.o.forEach((option, idx) => {
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = 'quiz-opt w-full text-left p-4 md:p-5 rounded-2xl bg-white/80 border-2 border-white text-sm font-semibold text-slate-700 shadow-sm transition-all';
+                button.innerHTML = `<span class="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-violet-100 text-violet-700 text-xs font-black mr-2">${String.fromCharCode(65 + idx)}</span><span>${option}</span>`;
+                button.addEventListener('click', () => selectQuizAnswer(idx, button));
+                optionsBox.appendChild(button);
+            });
+        }
+
+        function selectQuizAnswer(selectedIndex, selectedButton) {
+            const current = quizData[currQ];
+            const allOptions = document.querySelectorAll('.quiz-opt');
+            const correctIndex = current.a;
+            allOptions.forEach((button) => { button.disabled = true; button.classList.add('opacity-60'); });
+
+            allOptions[correctIndex].classList.remove('opacity-60', 'bg-white/80', 'border-white');
+            allOptions[correctIndex].classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-800');
+            allOptions[correctIndex].innerHTML += '<span class="float-right text-emerald-600 text-lg"><i class="bx bxs-check-circle"></i></span>';
+
+            const isCorrect = selectedIndex === correctIndex;
+            if (isCorrect) {
+                score++;
+                selectedButton.classList.remove('opacity-60');
+                selectedButton.classList.add('ring-2', 'ring-emerald-300');
+            } else {
+                selectedButton.classList.remove('opacity-60', 'bg-white/80', 'border-white', 'text-slate-700');
+                selectedButton.classList.add('bg-rose-50', 'border-rose-400', 'text-rose-800');
+                selectedButton.innerHTML += '<span class="float-right text-rose-600 text-lg"><i class="bx bxs-x-circle"></i></span>';
+            }
+
+            const feedback = document.getElementById('quiz-feedback');
+            const heading = document.getElementById('quiz-feedback-heading');
+            heading.className = isCorrect
+                ? 'p-4 text-sm font-extrabold bg-gradient-to-r from-emerald-100 to-teal-50 text-emerald-800'
+                : 'p-4 text-sm font-extrabold bg-gradient-to-r from-rose-100 to-orange-50 text-rose-800';
+            heading.innerHTML = isCorrect
+                ? '<i class="bx bxs-check-circle text-xl align-middle mr-1"></i> Tepat sekali! Jawabanmu benar. Yuk, pahami alasannya.'
+                : '<i class="bx bxs-info-circle text-xl align-middle mr-1"></i> Belum tepat, tidak apa-apa. Pelajari langkah berikut agar semakin paham.';
+
+            document.getElementById('quiz-solution').innerHTML = current.solution.map((step, index) => `
+                <div class="solution-step">
+                    <span class="solution-step-number">${index + 1}</span>
+                    <p class="text-xs md:text-[13px] leading-relaxed text-slate-700">${step}</p>
+                </div>
+            `).join('');
+            document.getElementById('quiz-final-answer').innerHTML = `<i class="bx bx-check-double text-lg align-middle mr-1"></i>${current.final}`;
+            feedback.classList.remove('hidden');
+            document.getElementById('btn-next-q').classList.remove('hidden');
+            setTimeout(() => feedback.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 120);
+        }
+
+        function nextQuestion() {
+            currQ++;
+            if (currQ < quizData.length) {
+                renderQuestion();
+                document.getElementById('quiz-q-text').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } else {
+                document.getElementById('quiz-area').classList.add('hidden');
+                document.getElementById('quiz-result-area').classList.remove('hidden');
+                document.getElementById('quiz-player-name').innerText = playerName;
+                const finalScore = Math.round((score / quizData.length) * 100);
+                document.getElementById('quiz-score-display').innerText = finalScore;
+                document.getElementById('quiz-summary-text').innerText = `Kamu menjawab ${score} dari ${quizData.length} soal dengan benar. ${finalScore >= 80 ? 'Luar biasa! Pemahamanmu sudah sangat baik.' : finalScore >= 60 ? 'Bagus! Terus berlatih dan baca kembali pembahasan yang tersedia.' : 'Terus semangat! Pelajari contoh dan pembahasan, lalu coba lagi.'}`;
+                document.getElementById('quiz-result-area').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        window.onload = () => {
+            initQuiz();
+            setTimeout(() => highlightCircle('pusat'), 800);
+        };
+    </script>
+</body>
+</html>
